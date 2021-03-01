@@ -1,0 +1,28 @@
+@import "variable_overrides";
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+.bg-first{
+    background-color: $bg-first;
+}
+
+li a {
+    color: black;
+    text-decoration: none!important;
+}
+
+.fa-shopping-cart{
+    color: black;
+}
+
+.g-droite{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.nav-link{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
