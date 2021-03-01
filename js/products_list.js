@@ -8,7 +8,7 @@ function getCameras(url) {
             place += `
                 <div class="col-12 col-md-5 mx-auto">
                     <div class="card shadow mb-5">
-                        <a href="Produit.html?id=${camera._id}">
+                        <a href="produit.html?id=${camera._id}">
                         <img class="card-img-top" src="${camera.imageUrl}"></>
                         </a>
                         <div class ="card-body">

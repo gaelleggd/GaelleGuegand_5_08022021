@@ -22,9 +22,7 @@ function getCamera(url) {
         place2 += `
             <div class="col-12 col-md-5 mx-auto">
                 <div class="card shadow mb-5">
-                    <a href="Produit.html?id=${data._id}">
                     <img class="card-img-top" src="${data.imageUrl}"></>
-                    </a>
                     <div class ="card-body">
                     <h3 class="card-title">${data.name}</h3>
                     <p class="card-text">${data.description}</p>
