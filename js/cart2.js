@@ -53,6 +53,60 @@ function addBasketProduct(container, productInfo, productBasket, basketContent, 
     return totalPrice;
 }
 
+////////// Message panier vide //////////
+function emptyBasketMessage(container){
+    const emptyBasket = document.createElement("div")
+    emptyBasket.innerHTML = "Votre panier est vide";
+    container.appendChild(emptyBasket);
+
+    return container;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+getCam = async (url) => {
+    try {
+        let response = await fetch(url);
+        if (response.ok){
+            let dataList = await response.json();
+            return dataList
+        } else {
+            console.log('Retour du serveur : ' + response.status);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+
+getCam("http://localhost:3000/api/cameras/").then(function(data){
+    //ajouter un élément au panier
+    const basketContent = JSON.parse(localStorage.getItem("basketContent"));//récuperation local storage
+    const container = document.getElementById("product-basket");
+    if (basketContent.length === 0){ //Message panier vide
+        emptyBasketMessage(container);
+    } else {
+        let totalPrice = 0;
+        for (let productBasket of basketContent){
+            for (let productInfo of data){
+                if (productBasket.id === productInfo._id){
+                    totalPrice = addBasketProduct(container, productInfo, productBasket, basketContent, totalPrice);
+                    localStorage.setItem("totalPriceConfirmationPage", totalPrice);
+                }
+            }
+        }
+        // calcul du total
+        const totalPriceBasket = document.getElementById("total-price")
+        totalPriceBasket.innerHTML = "Total: " + totalPrice/100 + " €";
+    }
+}).catch(function(err){
+    console.log(err);
+    if(err === 0){ // requete ajax annulée
+        alert("serveur HS");
+    }
+});
+
+
 ////////// Validation Nom, Prénom, Ville expression regulière formulaire //////////
 function isAlpha(value){
     return /[a-zA-Z]+/.test(value);
@@ -173,58 +227,6 @@ function sendOrder(){
         }
     });
 }
-////////// Message panier vide //////////
-function emptyBasketMessage(container){
-    const emptyBasket = document.createElement("div")
-    emptyBasket.innerHTML = "Votre panier est vide";
-    container.appendChild(emptyBasket);
-
-    return container;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-getCam = async (url) => {
-    try {
-        let response = await fetch(url);
-        if (response.ok){
-            let dataList = await response.json();
-            return dataList
-        } else {
-            console.log('Retour du serveur : ' + response.status);
-        }
-    } catch (e) {
-        console.error(e);
-    }
-}
-
-
-getCam("http://localhost:3000/api/cameras/").then(function(data){
-    //ajouter un élément au panier
-    const basketContent = JSON.parse(localStorage.getItem("basketContent"));//récuperation local storage
-    const container = document.getElementById("product-basket");
-    if (basketContent.length === 0){ //Message panier vide
-        emptyBasketMessage(container);
-    } else {
-        let totalPrice = 0;
-        for (let productBasket of basketContent){
-            for (let productInfo of data){
-                if (productBasket.id === productInfo._id){
-                    totalPrice = addBasketProduct(container, productInfo, productBasket, basketContent, totalPrice);
-                    localStorage.setItem("totalPriceConfirmationPage", totalPrice);
-                }
-            }
-        }
-        // calcul du total
-        const totalPriceBasket = document.getElementById("total-price")
-        totalPriceBasket.innerHTML = "Total: " + totalPrice/100 + " €";
-    }
-}).catch(function(err){
-    console.log(err);
-    if(err === 0){ // requete ajax annulée
-        alert("serveur HS");
-    }
-});
 
 // Message d'erreur formumlaire de validation
 const btn = document.getElementById("btn");

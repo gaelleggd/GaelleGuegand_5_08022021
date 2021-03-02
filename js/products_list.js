@@ -1,10 +1,10 @@
-////////// Appeler la fonction de récupération de l'API et sa promise pour implémenter la page HTML //////////
-function getCameras(url) {
+////////// Fonction de récupération de l'API pour implémenter la page HTML avec les objects disponibles sur le localhost //////////
+function getCameras(url) { // Appel de l'API en fetch
     fetch(url)
     .then ((res) => res.json())
     .then ((data) => {
                  let place = '<div></div>';
-        data.forEach(function(camera){
+        data.forEach(function(camera){ // Fonction pour créer les cartes pour chaque produit 
             place += `
                 <div class="col-12 col-md-5 mx-auto">
                     <div class="card shadow mb-5">
@@ -21,7 +21,9 @@ function getCameras(url) {
                 </div>
             `;
         });
-    document.getElementById('emplacement').innerHTML = place;
+    document.getElementById('emplacement').innerHTML = place; // Insertion des cartes en html sur la page à un emplacement précis
     })
 }
+
+////////// Appel de la fonction //////////
 getCameras("http://localhost:3000/api/cameras");
