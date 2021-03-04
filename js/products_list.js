@@ -1,4 +1,4 @@
-////////// Fonction de récupération de l'API pour implémenter la page HTML avec les objects disponibles sur le localhost //////////
+////////// Fonction de récupération des articles de l'API pour les afficher sur la page d'accueil html //////////
 function getCameras(url) { // Appel de l'API en fetch
     fetch(url)
     .then ((res) => res.json())
@@ -21,9 +21,10 @@ function getCameras(url) { // Appel de l'API en fetch
                 </div>
             `;
         });
-    document.getElementById('emplacement').innerHTML = place; // Insertion des cartes en html sur la page à un emplacement précis
+    document.getElementById('emplacement').innerHTML = place; // Insertion des cartes en html sur la page
     })
 }
 
 ////////// Appel de la fonction //////////
 getCameras("http://localhost:3000/api/cameras");
+

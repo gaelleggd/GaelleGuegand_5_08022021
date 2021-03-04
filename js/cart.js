@@ -1,9 +1,9 @@
-////////// Fonction pour ajouter les produits depuis le local storage vers le panier sur la page HTML //////////
-function addBasketProduct(container, productInfo, productBasket, basketContent, totalPrice){
+////////// Fonction pour ajouter les produits depuis le local storage vers le panier sur la page panier //////////
+function createBasket(container, productInfo, productBasket, basketContent, totalPrice){
     const productContainer = document.createElement("div");
     productContainer.setAttribute("class", "row justify-content-around align-items-center mb-5");
     productContainer.innerHTML = `
-    <img width="10%" src="${productInfo.imageUrl}"</img>
+    <img class="shadow" width="10%" src="${productInfo.imageUrl}"</img>
     <p class="col-md-3">${productInfo.name}</p>
     <div class="col-md-3">${productBasket.lenses}</div>
     <div class="col-md-3">${productInfo.price/100} €</div>
@@ -19,14 +19,14 @@ function addBasketProduct(container, productInfo, productBasket, basketContent, 
 
     btn.addEventListener('click', function(e){ // Supprimer un élément du panier au click sur le bouton
         const id = e.target.getAttribute("data-id");
-        for (let x = 0; x != basketContent.length; x = x + 1){
+        for (let x = 0; x != basketContent.length; x = x + 1){ // parcourt tout le panier, si un élément envoyé lors du click est trouvé il est supprimé
             if (basketContent[x].id === id){
                 basketContent.splice(x, 1);
                 break;
             }
         }
         localStorage.setItem("basketContent", JSON.stringify(basketContent)); // Sauvegarde du panier mis à jour
-        window.location.href = "panier.html"; // Revenir sur la page 
+        window.location.href = "panier.html"; // Revenir sur la page avec nombre de produits actualisé
     });
 
     productContainer.appendChild(btn); // Choix de l'emplacement dans le html
@@ -62,23 +62,22 @@ getCam = async (url) => {
 ////////// Appel de la fonction pour récupérer l'API en promise et effectuer une autre fonction qui en dépend //////////
 getCam("http://localhost:3000/api/cameras/").then(function(data){
     //ajouter un élément au panier
-    const basketContent = JSON.parse(localStorage.getItem("basketContent"));//récuperation local storage
+    const basketContent = JSON.parse(localStorage.getItem("basketContent")); //récuperation local storage
     const container = document.getElementById("product-basket");
     if (basketContent.length === 0){ // Afficher le message du panier vide
         emptyBasketMessage(container);
-    } else { // Appeler la fonction pour ajouter les produits depuis le local storage vers le panier sur la page HTML sous conditions
-        let totalPrice = 0;
-        for (let productBasket of basketContent){
-            for (let productInfo of data){
-                if (productBasket.id === productInfo._id){
-                    totalPrice = addBasketProduct(container, productInfo, productBasket, basketContent, totalPrice);
-                    localStorage.setItem("totalPriceConfirmationPage", totalPrice);
+    } else { // Appeler la fonction pour ajouter les produits depuis le local storage vers le panier sur la page HTML et mettre à jour le prix total
+        let totalPrice = 0; 
+        for (let productBasket of basketContent){ // pour chaque produit déjà stocké dans le local storage
+            for (let productInfo of data){ // pour chaque info du produit dans les données récupérées dans l'API
+                if (productBasket.id === productInfo._id){ // si l'id du produit dans le local storage est égal à l'id du produit dans l'API
+                    totalPrice = createBasket(container, productInfo, productBasket, basketContent, totalPrice); // on éxécute la fonction pour ajouter le(s) produit(s) sur la page html en implémentant le prix total
+                    localStorage.setItem("totalPriceConfirmationPage", totalPrice); // on créé la paire key/value du prix total
                 }
             }
         }
-        // Ajout du prix total à jour sur la page HTML
-        const totalPriceBasket = document.getElementById("total-price")
-        totalPriceBasket.innerHTML = "Total: " + totalPrice/100 + " €";
+        // Ajffichage du prix total à jour sur la page HTML
+        document.getElementById("total-price").innerHTML = "Total: " + totalPrice/100 + " €";
     }
 }).catch(function(err){
     console.log(err);

@@ -12,7 +12,8 @@ function getUrlId(){
     return urlId
 };
 
-////////// Fonction de récupération de l'API par ID pour implémenter la page html //////////
+
+////////// Fonction de récupération d'un produit auprès de l'API par son ID pour l'afficher sur la page produit //////////
 function getCamera(url) { // Appel de l'API en fetch
     fetch(url)
     .then ((res) => res.json())
@@ -46,16 +47,15 @@ function getCamera(url) { // Appel de l'API en fetch
             const lenses = document.getElementsByTagName("select");         
             const lenseSelected = lenses[0].value;
             addToBasket(lenseSelected);
-            alert("ajouté au panier"); // Fenêtre pop-up alert pour signaler que l'action au click a été réalisée
+            alert("Votre article a été ajouté au panier"); // Fenêtre pop-up alert pour signaler que l'action au click a été réalisée
         });
-
         function addToBasket(lenseSelected){ // Fonction pour ajouter un produit au local storage
             let basketContent = JSON.parse(localStorage.getItem("basketContent"));
             if (basketContent === null){
                 basketContent = [];
             }
             let product = new Product(id, lenseSelected); 
-            basketContent.push(product);
+            basketContent.push(product); // ajouter un élément au tableau
             localStorage.setItem("basketContent", JSON.stringify(basketContent));    
         }
     })
